@@ -15,6 +15,13 @@
       "when": 1791233438188,
       "tag": "0001_loose_ben_urich",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1791422062549,
+      "tag": "0002_white_wildside",
+      "breakpoints": true
     }
   ]
 }

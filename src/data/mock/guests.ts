@@ -24,9 +24,38 @@ export type MockGuest = {
   phone: string;
   phoneNormalized: string;
   city: string;
+  idType?: "US Driver License" | "Passport" | "Other";
+  dateOfBirth?: string;
+  idExpires?: string;
+  addressLine1?: string;
+  postalCode?: string;
+  state?: string;
+  country?: string;
+  countryCode?: string;
+  secondaryPhone?: string;
+  email?: string;
+  secondaryEmail?: string;
   status: GuestStatus;
   fixedRateCents?: number;
   notes?: string;
+  driverLicenseNumber?: string;
+  dnrCode?: "Damage / Missing Items" | "Disturbance" | "Drugs" | "No Pay" | "Harassment";
+  dnrRemarks?: string;
+  vehicle?: {
+    plate: string;
+    make: string;
+    color: string;
+    year: string;
+  };
+  savedPaymentSources?: Array<{
+    id: string;
+    label: string;
+    last4?: string;
+    tokenReference: string;
+    expirationMonth?: string;
+    expirationYear?: string;
+    note?: string;
+  }>;
   lastStayDate?: string;
   totalStays: number;
   stayHistory: GuestStay[];
@@ -206,6 +235,8 @@ export const mockGuests: MockGuest[] = guestSeeds
       fixedRateCents:
         status === "Regular" ? 9900 : status === "Returning" ? 10400 : undefined,
       notes: notesByGuest[fullName],
+      driverLicenseNumber: index % 3 === 0 ? `CA-DL-${String(410000 + index)}` : undefined,
+      vehicle: index % 4 === 0 ? { plate: `8SUN${index}`, make: "Toyota", color: "Silver", year: "2022" } : undefined,
       lastStayDate,
       totalStays: stayHistory.length,
       stayHistory,

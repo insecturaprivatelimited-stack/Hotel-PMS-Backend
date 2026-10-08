@@ -71,6 +71,12 @@ export type AppSettings = {
   }>;
   reservationSources: string[];
   bookingChannels: BookingChannel[];
+  rateCodes: Array<{
+    id: string;
+    name: string;
+    rateAdjustmentPercent: number;
+    active: boolean;
+  }>;
   paymentTypes: string[];
   chargeTypes: string[];
   expenseCategories: string[];
@@ -151,6 +157,12 @@ export const defaultSettings: AppSettings = {
     { id: "oyo", name: "OYO", type: "OTA", commissionPercent: 15, active: true },
     { id: "stayover", name: "Stayover", type: "Direct", commissionPercent: 0, active: true },
     { id: "company", name: "Company Direct Bill", type: "Company", commissionPercent: 0, active: true },
+  ],
+  rateCodes: [
+    { id: "rack", name: "RACK", rateAdjustmentPercent: 0, active: true },
+    { id: "walk-in", name: "WALK-IN", rateAdjustmentPercent: 0, active: true },
+    { id: "fixed", name: "FIXED GUEST RATE", rateAdjustmentPercent: 0, active: true },
+    { id: "company", name: "COMPANY RATE", rateAdjustmentPercent: -10, active: true },
   ],
   paymentTypes: [...DEFAULT_PAYMENT_TYPES],
   chargeTypes: [...DEFAULT_CHARGE_TYPES],

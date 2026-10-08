@@ -18,6 +18,8 @@ import {
   employees,
   expenses,
   guests,
+  guestPaymentSources,
+  guestVehicles,
   housekeepingRecords,
   maintenanceWorkOrders,
   payments,
@@ -25,6 +27,8 @@ import {
   propertySettings,
   propertyTasks,
   reservationCharges,
+  reservationExtraGuests,
+  reservationSignatures,
   reservations,
   rooms,
   roomTypes,
@@ -52,8 +56,12 @@ function clearDatabase() {
     DELETE FROM housekeeping_records;
     DELETE FROM maintenance_work_orders;
     DELETE FROM payments;
+    DELETE FROM reservation_signatures;
+    DELETE FROM reservation_extra_guests;
     DELETE FROM reservation_charges;
     DELETE FROM reservations;
+    DELETE FROM guest_payment_sources;
+    DELETE FROM guest_vehicles;
     DELETE FROM guests;
     DELETE FROM rooms;
     DELETE FROM room_types;
@@ -164,13 +172,42 @@ async function seed() {
       lastName: guest.lastName,
       phone: guest.phone,
       phoneNormalized: guest.phoneNormalized,
+      idType: guest.idType,
+      driverLicenseNumber: guest.driverLicenseNumber,
+      driverLicenseNormalized: guest.driverLicenseNumber?.replace(/\s/g, "").toUpperCase(),
+      dateOfBirth: guest.dateOfBirth,
+      idExpires: guest.idExpires,
+      addressLine1: guest.addressLine1,
+      postalCode: guest.postalCode,
+      state: guest.state,
+      country: guest.country,
+      countryCode: guest.countryCode,
+      secondaryPhone: guest.secondaryPhone,
+      secondaryEmail: guest.secondaryEmail,
       city: guest.city,
       guestStatus: guest.status,
       preferredRateCents: guest.fixedRateCents,
       notes: guest.notes,
+      dnrCode: guest.dnrCode,
+      dnrRemarks: guest.dnrRemarks,
       createdAt: seededAt,
       updatedAt: seededAt,
     })),
+  );
+
+  await db.insert(guestVehicles).values(
+    mockGuests
+      .filter((guest) => guest.vehicle)
+      .map((guest) => ({
+        id: `vehicle-${guest.id}`,
+        guestId: guest.id,
+        plate: guest.vehicle!.plate,
+        make: guest.vehicle!.make,
+        color: guest.vehicle!.color,
+        year: guest.vehicle!.year,
+        createdAt: seededAt,
+        updatedAt: seededAt,
+      })),
   );
 
   const guestIdByPhone = new Map(mockGuests.map((guest) => [guest.phoneNormalized, guest.id]));

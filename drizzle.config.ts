@@ -5,6 +5,6 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "sqlite",
   dbCredentials: {
-    url: process.env.DEMO_DATABASE_PATH ?? "data/sun-star-demo.sqlite",
+    url: process.env.DEMO_DATABASE_PATH ?? "data/sun-star-demo-v3.sqlite",
   },
 });

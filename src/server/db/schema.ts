@@ -82,11 +82,25 @@ export const guests = sqliteTable(
     lastName: text("last_name").notNull(),
     phone: text("phone").notNull(),
     phoneNormalized: text("phone_normalized").notNull(),
+    idType: text("id_type"),
+    driverLicenseNumber: text("driver_license_number"),
+    driverLicenseNormalized: text("driver_license_normalized"),
+    dateOfBirth: text("date_of_birth"),
+    idExpires: text("id_expires"),
+    addressLine1: text("address_line_1"),
+    postalCode: text("postal_code"),
+    state: text("state"),
+    country: text("country"),
+    countryCode: text("country_code"),
+    secondaryPhone: text("secondary_phone"),
+    secondaryEmail: text("secondary_email"),
     city: text("city"),
     email: text("email"),
     guestStatus: text("guest_status").notNull(),
     preferredRateCents: integer("preferred_rate_cents"),
     notes: text("notes"),
+    dnrCode: text("dnr_code"),
+    dnrRemarks: text("dnr_remarks"),
     archivedAt: text("archived_at"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -94,6 +108,7 @@ export const guests = sqliteTable(
   (table) => [
     index("guests_property_phone_idx").on(table.propertyId, table.phoneNormalized),
     index("guests_property_name_idx").on(table.propertyId, table.lastName, table.firstName),
+    uniqueIndex("guests_property_license_key").on(table.propertyId, table.driverLicenseNormalized),
   ],
 );
 
@@ -182,6 +197,13 @@ export const reservations = sqliteTable(
     childCount: integer("child_count").notNull(),
     roomRateCents: integer("room_rate_cents").notNull(),
     paymentArrangement: text("payment_arrangement").notNull(),
+    rateCode: text("rate_code"),
+    petCount: integer("pet_count").notNull().default(0),
+    servicePetCount: integer("service_pet_count").notNull().default(0),
+    bookingRemarks: text("booking_remarks"),
+    stayRemarks: text("stay_remarks"),
+    housekeepingRemarks: text("housekeeping_remarks"),
+    otherRemarks: text("other_remarks"),
     notes: text("notes"),
     checkedInAt: text("checked_in_at"),
     checkedOutAt: text("checked_out_at"),
@@ -195,6 +217,62 @@ export const reservations = sqliteTable(
     index("reservations_guest_idx").on(table.guestId),
     index("reservations_status_idx").on(table.status),
   ],
+);
+
+export const guestVehicles = sqliteTable(
+  "guest_vehicles",
+  {
+    id: id("id"),
+    guestId: text("guest_id").notNull().references(() => guests.id),
+    plate: text("plate").notNull(),
+    make: text("make"),
+    color: text("color"),
+    year: text("year"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (table) => [index("guest_vehicles_guest_idx").on(table.guestId)],
+);
+
+export const guestPaymentSources = sqliteTable(
+  "guest_payment_sources",
+  {
+    id: id("id"),
+    guestId: text("guest_id").notNull().references(() => guests.id),
+    label: text("label").notNull(),
+    last4: text("last4"),
+    tokenReference: text("token_reference").notNull(),
+    expirationMonth: text("expiration_month"),
+    expirationYear: text("expiration_year"),
+    note: text("note"),
+    createdAt: createdAt(),
+  },
+  (table) => [index("guest_payment_sources_guest_idx").on(table.guestId)],
+);
+
+export const reservationExtraGuests = sqliteTable(
+  "reservation_extra_guests",
+  {
+    id: id("id"),
+    reservationId: text("reservation_id").notNull().references(() => reservations.id),
+    guestId: text("guest_id").references(() => guests.id),
+    name: text("name").notNull(),
+    driverLicenseNumber: text("driver_license_number"),
+    createdAt: createdAt(),
+  },
+  (table) => [index("reservation_extra_guests_reservation_idx").on(table.reservationId)],
+);
+
+export const reservationSignatures = sqliteTable(
+  "reservation_signatures",
+  {
+    id: id("id"),
+    reservationId: text("reservation_id").notNull().references(() => reservations.id),
+    signedName: text("signed_name").notNull(),
+    termsVersion: text("terms_version").notNull(),
+    acceptedAt: text("accepted_at").notNull(),
+  },
+  (table) => [index("reservation_signatures_reservation_idx").on(table.reservationId)],
 );
 
 export const reservationCharges = sqliteTable(
@@ -371,6 +449,10 @@ export type Room = typeof rooms.$inferSelect;
 export type NewRoom = typeof rooms.$inferInsert;
 export type Guest = typeof guests.$inferSelect;
 export type NewGuest = typeof guests.$inferInsert;
+export type GuestVehicle = typeof guestVehicles.$inferSelect;
+export type NewGuestVehicle = typeof guestVehicles.$inferInsert;
+export type GuestPaymentSource = typeof guestPaymentSources.$inferSelect;
+export type NewGuestPaymentSource = typeof guestPaymentSources.$inferInsert;
 export type Company = typeof companies.$inferSelect;
 export type NewCompany = typeof companies.$inferInsert;
 export type BookingChannel = typeof bookingChannels.$inferSelect;
@@ -381,6 +463,10 @@ export type Employee = typeof employees.$inferSelect;
 export type NewEmployee = typeof employees.$inferInsert;
 export type Reservation = typeof reservations.$inferSelect;
 export type NewReservation = typeof reservations.$inferInsert;
+export type ReservationExtraGuest = typeof reservationExtraGuests.$inferSelect;
+export type NewReservationExtraGuest = typeof reservationExtraGuests.$inferInsert;
+export type ReservationSignature = typeof reservationSignatures.$inferSelect;
+export type NewReservationSignature = typeof reservationSignatures.$inferInsert;
 export type ReservationCharge = typeof reservationCharges.$inferSelect;
 export type NewReservationCharge = typeof reservationCharges.$inferInsert;
 export type Payment = typeof payments.$inferSelect;

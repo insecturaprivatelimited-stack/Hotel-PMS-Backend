@@ -47,6 +47,18 @@ export type MockReservation = {
   commissionPercent?: number;
   commissionCents?: number;
   netRoomRevenueCents?: number;
+  rateCode?: string;
+  bookingRemarks?: string;
+  stayRemarks?: string;
+  housekeepingRemarks?: string;
+  otherRemarks?: string;
+  petCount?: number;
+  servicePetCount?: number;
+  extraGuests?: Array<{ name: string; driverLicenseNumber?: string }>;
+  bookingRemarkEntries?: string[];
+  stayRemarkEntries?: string[];
+  housekeepingRemarkEntries?: string[];
+  otherRemarkEntries?: string[];
   adults?: number;
   children?: number;
   company?: string;
