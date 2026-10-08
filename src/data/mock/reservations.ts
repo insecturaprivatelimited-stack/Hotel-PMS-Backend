@@ -59,6 +59,12 @@ export type MockReservation = {
   stayRemarkEntries?: string[];
   housekeepingRemarkEntries?: string[];
   otherRemarkEntries?: string[];
+  registrationSignatureDataUrl?: string;
+  registrationSignedName?: string;
+  registrationSignedAt?: string;
+  invoiceSignatureDataUrl?: string;
+  invoiceSignedName?: string;
+  invoiceSignedAt?: string;
   adults?: number;
   children?: number;
   company?: string;
